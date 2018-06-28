@@ -34,12 +34,39 @@ class Usuario {
 
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM usuario WHERE idUsuario = :ID", array(":ID"=>$id));
+		$results = $sql->select("SELECT * FROM usuario WHERE idUsuario = :ID", array(":ID" => $id));
 
 		if(isset($results[0])){
 			$row = $results[0];
-			
+
+			$this->setIdUsuario($row['idUsuario']);
+			$this->setLogin($row['login']);
+			$this->setSenha($row['senha']);
 		}
+	}
+
+	public static function search($login){
+
+		$sql = new Sql();
+
+		return $sql->Select("SELECT * FROM usuario WHERE login LIKE :search", array(
+			':search' => "%".$login."%"
+		));
+
+	}
+
+	public static function getList(){
+		$sql = new Sql();
+
+		return $sql->Select("SELECT * FROM usuario");
+	}
+
+	public function __toString(){
+		return json_encode(array(
+			"idUsuario" => $this->getIdUsuario(),
+			"login" => $this->getLogin(),
+			"senha" => $this->getSenha()
+		));
 	}
 }
 
